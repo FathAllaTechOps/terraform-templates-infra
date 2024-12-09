@@ -92,6 +92,8 @@ jobs:
           "domain_name": "${{ inputs.domain_name }}"
         }' > values.json
 
+    - name: cat values.json
+      run: cat values.json
     - name: Run replace_vars.py
       run: |
         python replace_vars.py . values.json
