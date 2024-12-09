@@ -1,8 +1,9 @@
 import os
 import shutil
+import sys
 
 def list_directories():
-    exclude_dirs = {'Bootstrap', 'CloudFront_Functions', 'Helm_Values', 'Config', '.git'}
+    exclude_dirs = {'Bootstrap', 'CloudFront_Functions', 'Helm_Values', 'Config', '.git', '.github'}
     dirs = [d for d in os.listdir('.') if os.path.isdir(d) and d not in exclude_dirs]
     print("Available modules:")
     for i, d in enumerate(dirs):
@@ -23,10 +24,7 @@ def copy_files(src, dest, file_mapping):
         with open(src_path, 'r') as src_f, open(dest_path, 'a') as dest_f:
             dest_f.write(src_f.read())
 
-def main():
-    dirs = list_directories()
-    selected_dirs = get_user_choices(dirs)
-    
+def main(selected_dirs):
     infrastructure_dir = 'infrastructure'
     os.makedirs(infrastructure_dir, exist_ok=True)
     
@@ -57,4 +55,18 @@ def main():
     print("Infrastructure directory has been created with the selected modules.")
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        selected_dirs = []
+        if sys.argv[1].lower() == 'true':
+            selected_dirs.append('S3_CloudFront')
+        if sys.argv[2].lower() == 'true':
+            selected_dirs.append('Network')
+        if sys.argv[3].lower() == 'true':
+            selected_dirs.append('EKS_Config')
+        if sys.argv[4].lower() == 'true':
+            selected_dirs.append('EKS')
+    else:
+        dirs = list_directories()
+        selected_dirs = get_user_choices(dirs)
+    
+    main(selected_dirs)

@@ -1,0 +1,57 @@
+name: Run Scripts
+
+on:
+  workflow_dispatch:
+    inputs:
+      S3_CloudFront:
+        description: 'Include S3_CloudFront module'
+        required: false
+        default: false
+        type: boolean
+      Network:
+        description: 'Include Network module'
+        required: false
+        default: false
+        type: boolean
+      EKS_Config:
+        description: 'Include EKS_Config module'
+        required: false
+        default: false
+        type: boolean
+      EKS:
+        description: 'Include EKS module'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  run-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+
+    - name: Run replace_vars.py
+      run: |
+        python replace_vars.py . values.json
+
+    - name: Run generate_infra.py
+      run: |
+        python generate_infra.py ${{ inputs.S3_CloudFront }} ${{ inputs.Network }} ${{ inputs.EKS_Config }} ${{ inputs.EKS }}
+
+    - name: Upload infrastructure directory
+      uses: actions/upload-artifact@v4
+      with:
+        name: infrastructure
+        path: infrastructure/
+        retention-days: 1
