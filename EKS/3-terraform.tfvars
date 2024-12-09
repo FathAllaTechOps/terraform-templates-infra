@@ -1,7 +1,7 @@
 ##########################################
 ################# EKS ####################
 ##########################################
-cluster_name           = ${cluster_name}
+cluster_name           = "${cluster_name}"
 cluster_version        = ${cluster_version}
 kms_key_administrators = ["arn:aws:iam::${aws_account_id}:role/Github-Runners-Access", "arn:aws:iam::${aws_account_id}:role/DevOps", "arn:aws:iam::${aws_account_id}:role/Administrator"]
 cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
