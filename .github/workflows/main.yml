@@ -24,40 +24,8 @@ on:
         required: false
         default: false
         type: boolean
-      aws_account_id:
-        description: 'AWS Account ID'
-        required: true
-        type: string
-      project_name:
-        description: 'Project Name'
-        required: true
-        type: string
-      managed_by:
-        description: 'Managed By'
-        required: true
-        type: string
-      aws_region:
-        description: 'AWS Region'
-        required: true
-        type: string
-      vpc_cidr_range:
-        description: 'VPC CIDR Range'
-        required: true
-        type: string
-      cluster_name:
-        description: 'Cluster Name'
-        required: true
-        type: string
-      cluster_version:
-        description: 'Cluster Version'
-        required: true
-        type: string
-      eks_instance_type:
-        description: 'EKS Instance Type'
-        required: true
-        type: string
-      domain_name:
-        description: 'Domain Name'
+      aws_details:
+        description: 'AWS Details in JSON format'
         required: true
         type: string
 
@@ -80,20 +48,11 @@ jobs:
 
     - name: Create values.json
       run: |
-        echo '{
-          "aws_account_id": "${{ inputs.aws_account_id }}",
-          "project_name": "${{ inputs.project_name }}",
-          "managed_by": "${{ inputs.managed_by }}",
-          "aws_region": "${{ inputs.aws_region }}",
-          "vpc_cidr_range": "${{ inputs.vpc_cidr_range }}",
-          "cluster_name": "${{ inputs.cluster_name }}",
-          "cluster_version": "${{ inputs.cluster_version }}",
-          "eks_instance_type": "${{ inputs.eks_instance_type }}",
-          "domain_name": "${{ inputs.domain_name }}"
-        }' > values.json
+        echo '${{ inputs.aws_details }}' > values.json
 
     - name: cat values.json
       run: cat values.json
+
     - name: Run replace_vars.py
       run: |
         python replace_vars.py . values.json
