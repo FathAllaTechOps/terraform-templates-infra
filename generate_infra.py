@@ -45,6 +45,11 @@ def main(selected_dirs):
         '3-terraform.tfvars': 'Config/Lower.tfvars'
     }
     
+    # Copy and append to 04-variables.tf
+    variables_file = '04-variables.tf'
+    with open(variables_file, 'r') as src_f, open(os.path.join(infrastructure_dir, variables_file), 'a') as dest_f:
+        dest_f.write(src_f.read())
+    
     for module_dir in selected_dirs:
         copy_files(module_dir, infrastructure_dir, file_mapping)
         if module_dir == 'S3_CloudFront':

@@ -19,4 +19,4 @@ rules = {
     }
   }
 }
-alt_domain_names    = ["dev.${domain_name}", "sit.${domain_name}", "uat.${domain_name}"]
+alt_domain_names    = ["dev.${domain_name}", "sit.${domain_name}"]
