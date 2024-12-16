@@ -6,6 +6,7 @@ This repository contains scripts and workflows to generate Terraform infrastruct
 
 You can trigger the GitHub Actions workflow manually using the `workflow_dispatch` event. Follow the steps below to trigger the workflow:
 
+
 ### Using GitHub Web Interface
 
 1. Go to the Actions tab in your GitHub repository.
