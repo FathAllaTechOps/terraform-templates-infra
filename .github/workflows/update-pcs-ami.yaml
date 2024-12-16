@@ -1,0 +1,36 @@
+name: PCS AMI Update
+on:
+  schedule:
+    - cron: "0 7 * * 1" # At 7:00 on Monday UTC
+  workflow_dispatch:
+jobs:
+  Terraform_Workflow:
+    environment: Lower
+    runs-on: arc-scale-set
+    steps:
+      - uses: VFGroup-VBIT/vbitdc-opf-actions/workflow-trigger@main
+        with:
+          workflow_name: Infrastructure.yaml
+          workflow_inputs: '{"Action":"apply","Environment":"Lower","target_module":"cluster_eks"}'
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy Started Notification
+        uses: VFGroup-VBIT/vbitdc-opf-actions/teams-incoming-webhook-action@main
+        if: ${{ success() }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          webhook-url: ${{ secrets.webhook_url }}
+          deploy-card: true
+          title: '${{ github.event.repository.name }} "Lower" is triggered to upgrade the PCS AMI and EKS addons.'
+          color: "info"
+          
+      - name: Failed Notification
+        uses: VFGroup-VBIT/vbitdc-opf-actions/teams-incoming-webhook-action@main
+        if: ${{ failure() }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          webhook-url: ${{ secrets.webhook_url }}
+          deploy-card: true
+          title: '${{ github.event.repository.name }} "Lower" failed to be triggered to upgrade the PCS AMI and EKS addons.'
+          color: "failure"
